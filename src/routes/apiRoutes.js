@@ -1,3 +1,11 @@
-const express = require('express').Router();
+const router = require('express').Router();
 
-module.exports = express;
+const controllerCadastro = require("../controllers/controllerCadastro");
+
+//Rotas Cadastro
+router.post('/cadastro', controllerCadastro.createUser);
+router.get('/cadastro', controllerCadastro.getAllUsers);
+router.put('/cadastro', controllerCadastro.updateUser);
+router.delete('/cadastro/:cpf', controllerCadastro.deleteUser);
+
+module.exports = router;
