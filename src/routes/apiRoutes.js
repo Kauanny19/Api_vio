@@ -6,6 +6,6 @@ const controllerCadastro = require("../controllers/controllerCadastro");
 router.post('/cadastro', controllerCadastro.createUser);
 router.get('/cadastro', controllerCadastro.getAllUsers);
 router.put('/cadastro', controllerCadastro.updateUser);
-router.delete('/cadastro/:cpf', controllerCadastro.deleteUser);
+router.delete('/cadastro/:id', controllerCadastro.deleteUser);
 
 module.exports = router;
