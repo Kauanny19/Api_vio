@@ -9,43 +9,53 @@ module.exports = class controllerCadastro {
         .status(400)
         .json({ error: "Todos os campos devem ser preenchidos" });
     } else if (isNaN(cpf) || cpf.length !== 11) {
-      return res
-        .status(400)
-        .json({
-          error: "CPF inválido. Deve conter exatamente 11 dígitos numéricos",
-        });
+      return res.status(400).json({
+        error: "CPF inválido. Deve conter exatamente 11 dígitos numéricos",
+      });
     } else if (!email.includes("@")) {
       return res.status(400).json({ error: "Email inválido. Deve conter @" });
     } else {
-      //Construção query INSERT
-      const query = `INSERT INTO usuario (cpf, senha, email, nome) VALUES('${cpf}',
-      '${senha}',
-      '${email}',
-      '${nome}')`;
-
+      
+      const querycpf = `SELECT * FROM usuario WHERE cpf = '${cpf}'`
+      
       try {
-        connect.query(query, function (err) {
+        connect.query(querycpf, function (err, results) {
           if (err) {
             console.error(err);
-            console.error(err.code);
-            if (err.code === "ER_DUP_ENTRY") {
-              return res
-                .status(400)
-                .json({ error: "O email já está vinculado a outro usuário" });
-            } else {
-              return res
-                .status(500)
-                .json({ error: "Error interno do servidor" });
-            }
-          } else {
-            return res
-              .status(201)
-              .json({ message: "Usuário criado com sucesso" });
+            return res.status(500).json({ error: "Error interno do servidor" }); 
+          }
+          else if (results.length > 0){
+            return res.status(400).json({ error: "CPF já cadastrado" });
+          } else{
+            const query = `INSERT INTO usuario (cpf, senha, email, nome) VALUES('${cpf}',
+            '${senha}',
+            '${email}',
+            '${nome}')`;
+
+            connect.query(query, function (err) {
+              if (err) {
+                console.error(err);
+                console.error(err.code);
+                if (err.code === "ER_DUP_ENTRY") {
+                  return res
+                    .status(400)
+                    .json({ error: "O email já está vinculado a outro usuário" });
+                } else {
+                  return res
+                    .status(500)
+                    .json({ error: "Error interno do servidor" });
+                }
+              } else {
+                return res
+                  .status(201)
+                  .json({ message: "Usuário criado com sucesso" });
+              }
+            });
           }
         });
       } catch (error) {
         console.error(error);
-        res.status(500).json({error: "Erro interno do servidor"})
+        res.status(500).json({ error: "Erro interno do servidor" });
       }
     }
   }
@@ -96,11 +106,13 @@ module.exports = class controllerCadastro {
         if (results.affectedRows === 0) {
           return res.status(404).json({ error: "Usuário não encontrado" });
         }
-        return res.status(200).json({ message: "Usuário atualizado com sucesso" });
+        return res
+          .status(200)
+          .json({ message: "Usuário atualizado com sucesso" });
       });
-    } catch(error) {
+    } catch (error) {
       console.error("Erro ao executar consulta", error);
-      return res.status(500).json({error:"Error interno do servidor"});
+      return res.status(500).json({ error: "Error interno do servidor" });
     }
   }
 
@@ -109,20 +121,24 @@ module.exports = class controllerCadastro {
     const query = `DELETE FROM usuario WHERE id_usuario = ?`;
     const values = [id_usuario];
 
-    try{
-      connect.query(query,values,function(err,results){
-        if(err){
+    try {
+      connect.query(query, values, function (err, results) {
+        if (err) {
           console.error(err);
-          return res.status(500).json({error:"Erro interno do servidor"});
+          return res.status(500).json({ error: "Erro interno do servidor" });
         }
-        if(results.affectedRows === 0){
-          return res.status(404).json({error:"Usuário não encontrado"});
+        if (results.affectedRows === 0) {
+          return res.status(404).json({ error: "Usuário não encontrado" });
         }
-        return res.status(200).json({message:"Usuário excluído com sucesso"});
+        return res
+          .status(200)
+          .json({ message: "Usuário excluído com sucesso" });
       });
-    } catch(error){
+    } catch (error) {
       console.error(error);
-      return res.status(500).json({error:"Erro interno do servidor"});
+      return res.status(500).json({ error: "Erro interno do servidor" });
     }
   }
 };
+
+
