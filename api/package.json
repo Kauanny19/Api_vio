@@ -1,19 +1,18 @@
 {
-  "name": "projeto_reserva_sala",
+  "name": "kauanny",
   "version": "1.0.0",
-  "description": "projeto de reserva de sala",
+  "description": "Criando um Crud de usuarios",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js"
   },
-  "author": "Hyago",
+  "author": "Kauanny",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.4",
+    "axios": "^1.7.7",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "mysql2": "^3.11.3",
-    "prompt-sync": "^4.2.0"
+    "express": "^4.21.0",
+    "mysql2": "^3.11.3"
   }
 }
