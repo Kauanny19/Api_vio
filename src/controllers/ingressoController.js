@@ -49,7 +49,7 @@ module.exports = class ingressoController {
           .status(200)
           .json({
             message: "Ingressos listados com sucesso!",
-            events: results,
+            ingressos: results,
           });
       });
     } catch (error) {
