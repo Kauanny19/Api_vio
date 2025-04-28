@@ -1,5 +1,5 @@
 const router = require('express').Router()
-
+const verifyJWT = require('../services/verifyJWT');
 const userController = require("../controllers/userController");
 const organizadorController = require("../controllers/organizadorController");
 const eventoController = require("../controllers/eventoController");
@@ -7,10 +7,10 @@ const ingressoController = require("../controllers/ingressoController");
 
 //Rotas Usuário
 router.post('/user', userController.createUser);
-router.post("/login", userController.loginUser);
-router.get('/user', userController.getAllUsers);
+router.get('/user', verifyJWT, userController.getAllUsers);
 router.put('/user', userController.updateUser);
 router.delete('/user/:id', userController.deleteUser);
+router.post("/login", userController.loginUser);
 
 //Rotas Organizador
 router.post('/organizador', organizadorController.createOrganizador);
