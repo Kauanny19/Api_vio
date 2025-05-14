@@ -20,11 +20,11 @@ router.delete('/organizador/:id', organizadorController.deleteOrganizador);
 
 //Rotas Evento
 router.post('/evento', eventoController.createEvento);
-router.get('/evento', eventoController.getAllEventos);
+router.get('/evento',verifyJWT, eventoController.getAllEventos);
 router.put('/evento', eventoController.updateEvento);
 router.delete('/evento/:id', eventoController.deleteEvento);
 router.get('/evento/data', eventoController.getEventosPorData);
-router.get('/evento/:data_hora', eventoController.getEventosDias);
+router.get('/evento/:data_hora', verifyJWT, eventoController.getEventosDias);
 
 //Rotas Ingresso
 router.post('/ingresso', ingressoController.createIngresso);
