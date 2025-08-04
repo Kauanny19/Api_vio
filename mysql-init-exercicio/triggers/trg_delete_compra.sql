@@ -24,4 +24,3 @@ delete from compra where id_compra = 4;
 
 select * from historico_compra;
 
-

@@ -22,4 +22,3 @@ update usuario
 set cpf = '16000000000'
 where id_usuario = 1;
 
-

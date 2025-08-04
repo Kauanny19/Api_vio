@@ -1,13 +1,14 @@
+-- CRIAÇÃO DE FUNCTION 
 delimiter $$
 create function calcula_idade(datanascimento date)
 returns int
 deterministic
 contains sql
-begin
+begin  
     declare idade int;
     set idade = timestampdiff(year, datanascimento, curdate());
     return idade;
-end; $$
+end $$
 delimiter ;
 
 show create function calcula_idade;
@@ -18,10 +19,10 @@ delimiter $$
 create function status_sistema()
 returns varchar(50)
 no sql
-begin
+begin 
     return 'Sistema operando normalmente';
 end; $$
-delimiter ;
+delimiter ; 
 
 select status_sistema();
 
@@ -29,9 +30,9 @@ delimiter $$
 create function total_compras_usuario(id_usuario int)
 returns int
 reads sql data
-begin
+begin 
     declare total int;
-
+    
     select count(*) into total
     from compra 
     where id_usuario = compra.fk_id_usuario;
@@ -40,10 +41,10 @@ begin
 end; $$
 delimiter ;
 
-select total_compras_usuario(3) as "Total de compras";
+select total_compras_usuario(3) "Total de compras";
 
--- tabela para testar a cláusula modifies sql data
-create table log_evento (
+-- TABELA PARA TESTAR A CLÁUSULA MODIFILES SQL DATA
+create table log_evento(
     id_log int auto_increment primary key,
     mensagem varchar(255),
     data_log datetime default current_timestamp
@@ -59,38 +60,38 @@ begin
     values(texto);
     return 'Log inserido com sucesso';
 end; $$
+
 delimiter ; 
 
 show create function registrar_log_evento;
 
--- visualiza o estado da váriavel de controle para permissões de criação de funções
+-- VIZUALIZAR O ESTADO DA VARIAVEL DE CONTROLE PARA PERMISSÃO DE CRIAÇÃO DE FUNÇÕES
 show variables like 'log_bin_trust_function_creators';
 
--- altera a variável global do MySQL
--- precisa ter permissão de administrador do banco
+
 set global log_bin_trust_function_creators = 1;
 
 select registrar_log_evento('teste');
 
-delimiter $$
-create function mensagem_boas_vindas(nome_usuario varchar(100))
+delimiter $$ 
+create function mensagem_boas_vinas(nome_usuario varchar(100))
 returns varchar(255)
 deterministic
 contains sql
 begin
     declare msg varchar(255);
-    set msg = concat('Olá, ', nome_usuario, '! Seja bem-vindo(a) ao sistema VIO.');
+    set msg = concat('Olá ', nome_usuario, '! Seja bem-vindo(a) ao sistema VIO');
     return msg;
 end; $$
 delimiter ;
 
--- Ver Funções criadas
+-- Ver as funções criadas
 select routine_name from 
-information_schema.routines 
-where routine_type = 'FUNCTION'
-and routine_schema = 'vio_kauanny';
+information_schema.routines
+    where routine_type = 'FUNCTION'
+        and routine_schema = 'vio_gabi';
 
--- maior idade
+-- Ver usuário maior de idade
 delimiter $$
 create function is_maior_idade(data_nascimento date)
 returns boolean
@@ -105,26 +106,26 @@ begin
 end; $$
 delimiter ;
 
--- categorizar usuários por faixa etária
-
+-- Categorizar usuários por faixa etária
 delimiter $$
 create function faixa_etaria(data_nascimento date)
 returns varchar(20)
 not deterministic
-contains sql
-begin
+contains sql 
+begin 
     declare idade int;
 
     -- cálculo da idade com a função já criada
     set idade = calcula_idade(data_nascimento);
 
     if idade < 18 then
-        return "Menor de idade";
+        return "menor de idade";
     elseif idade < 60 then
-        return "Adulto";
-    else
-        return "Idoso";
+        return "adulto";
+    else 
+        return "idoso";
     end if;
+
 end; $$
 delimiter ;
 
@@ -133,29 +134,29 @@ select faixa_etaria(data_nascimento) as faixa, count(*) as quantidade from usuar
 group by faixa;
 
 -- identificar uma faixa etária específica
-select name from usuario
-    where faixa_etaria(data_nascimento) = "Adulto";
+select name from usuario 
+    where faixa_etaria(data_nascimento) = "idoso";
 
 -- calcular a média de idade de usuário
 delimiter $$
 create function media_idade()
 returns decimal(5,2)
+not deterministic
 reads sql data
-begin
+begin 
     declare media decimal(5,2);
 
-    -- cálculo da média da idades
-    select avg(timestampdiff(year,data_nascimento,curdate()))into media from usuario;
+    -- cálculo da média das idades 
+    select avg(timestampdiff(year, data_nascimento, curdate())) into media from usuario;
 
     return ifnull(media, 0);
 end; $$
 delimiter ;
 
--- Selecionar idade específica
-select "A média de idade dos clientes é maior que 30" as resultado 
-where media_idade() > 30;
+-- selecionar idade especifica
+select "A média de idade dos clientes é maior que 30" as resultado where media_idade() > 30;
 
--- Exercício direcionado
+-- EXERCÍCIO DIRECIONADO
 -- Cálculo do total gasto por um usuário
 delimiter $$
 create function calcula_total_gasto(pid_usuario int)
@@ -176,13 +177,13 @@ end; $$
 
 delimiter ;
 
--- buscar a faixa etária de um usuário
+-- Buscar a faixa etária de um usuário
 delimiter $$
 create function buscar_faixa_etaria_usuario(pid int)
 returns varchar(20)
 not deterministic
-reads sql data
-begin
+reads sql data 
+begin 
     declare nascimento date;
     declare faixa varchar(20);
 
@@ -194,13 +195,10 @@ begin
 
     return faixa;
 end; $$
-
 delimiter ;
 
 
--- EXERCÍCIOS
-
--- Retorna a quantidade total de ingressos vendidos para um determinado evento.
+-- EXERCÍCIO
 delimiter $$
 create function total_ingressos_vendidos(id_evento int)
 returns int
@@ -217,10 +215,9 @@ begin
 
     return ifnull(total,0);
 end; $$
-
 delimiter ;
 
--- Retorna o valor total arrecadado (soma dos preços × quantidades vendidas) em um evento.
+
 delimiter $$ 
 create function renda_total_evento(id_evento int)
 returns decimal (10,2)
