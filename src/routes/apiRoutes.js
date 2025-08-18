@@ -4,7 +4,7 @@ const userController = require('../controllers/userController');
 const organizadorController = require('../controllers/organizadorController');
 const eventoController = require('../controllers/eventoController');
 const ingressoController = require('../controllers/ingressoController');
-const upload = require('../services/upload');
+const upload = require("../services/upload");
 
 router.post('/user', userController.createUser);
 router.get('/user',verifyJWT, userController.getAllUsers);
@@ -18,6 +18,8 @@ router.put('/organizador', organizadorController.updateOrganizador);
 router.delete('/organizador/:id', organizadorController.deleteOrganizador);
 
 router.post('/evento', upload.single("imagem"), eventoController.createEvento);
+router.get("/evento/imagem/:id", eventoController.getImagemEvento);
+
 router.get('/evento',verifyJWT, eventoController.getAllEventos);
 router.put('/evento', eventoController.updateEvento);   
 router.delete('/evento/:id', eventoController.deleteEvento);
