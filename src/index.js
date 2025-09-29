@@ -1,6 +1,8 @@
 const express = require("express"); //Importa o módulo Express
 const cors = require("cors");
-require("dotenv-safe").config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv-safe").config();
+}
 const jwt = require("jsonwebtoken");
 const testConnect = require("./db/testConnect");
 
@@ -20,10 +22,10 @@ class AppController {
   }
 
   routes() {
-    const apiRoutes= require('./routes/apiRoutes')
-    this.express.use('/api/v1/',apiRoutes);// Definição da URL Base
-    this.express.get('/', (_,res)=> {
-      res.send({status:'OK'})
+    const apiRoutes = require("./routes/apiRoutes");
+    this.express.use("/api/v1/", apiRoutes); // Definição da URL Base
+    this.express.get("/", (_, res) => {
+      res.send({ status: "OK" });
     });
   }
 }
